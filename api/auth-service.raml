@@ -1,0 +1,441 @@
+#%RAML 1.0
+#   Copyright 2018 Cisco and/or its affiliates
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+title: 2-IMMERSE Auth Service
+version: v1
+mediaType: application/json
+
+types:
+  User: !include types/user.raml
+  Profile: !include types/profile.raml
+  Device: !include types/device.raml
+  DeviceCode: !include types/device-code.raml
+  Key: !include types/key.raml
+  ErrorResponse: !include types/error.raml
+  TokenResponse: !include types/token-response.raml
+  ResourceResponse: !include types/resource-response.raml
+
+traits:
+  client:
+    headers:
+      Authorization:
+        description: Set to client_id:<client_id>, client_secret:<client_secret>.
+  authenticated:
+    headers:
+      Authorization:
+        description: Set to bearer:<access_token>.
+
+
+/healthcheck:
+  description: Query service status
+  get:
+    responses:
+      204:
+
+/auth:
+  /token:
+    description: Generate an access token and refresh token that you can use to call our resource APIs.
+    post:
+      is: [client]
+      body:
+        application/json:
+          type: object
+          properties:
+            grant_type: string
+            username: string
+            password: string
+            scope: string
+      responses:
+        200:
+          body:
+            application/json:
+              type: TokenResponse
+        400:
+          body:
+            application/json:
+              type: ErrorResponse
+  /revoke:
+    description: Revoke an access token and refresh token pair.
+    post:
+      is: [authenticated]
+      body:
+        application/json:
+          type: object
+          properties:
+            access_token: string
+      responses:
+        204:
+
+/users:
+  description: Manage users
+  get:
+    description: Get all users
+    is: [authenticated]
+    responses:
+      200:
+        headers:
+          Accept-Range:
+          Content-Range:
+        body:
+          application/json:
+            type: [User]
+      403:
+        body:
+          application/json:
+            type: ErrorResponse
+  post:
+    description: Register a new user
+    is: [client]
+    responses:
+      201:
+        body:
+          application/json:
+            type: ResourceResponse
+      400:
+        body:
+          application/json:
+            type: ErrorResponse
+  /{id}:
+    get:
+      description: Get user by id
+      is: [authenticated]
+      responses:
+        200:
+          body:
+            application/json:
+              type: User
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+        404:
+          body:
+            application/json:
+              type: ErrorResponse
+    put:
+      description: Update the user
+      is: [authenticated]
+      responses:
+        200:
+          body:
+            application/json:
+              type: User
+        400:
+          body:
+            application/json:
+              type: ErrorResponse
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+        404:
+          body:
+            application/json:
+              type: ErrorResponse
+    delete:
+      description: Delete the user
+      is: [authenticated]
+      responses:
+        204:
+        400:
+          body:
+            application/json:
+              type: ErrorResponse
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+    /profile:
+      description: Manage users profile
+      get:
+        description: Get a users profile
+        is: [authenticated]
+        responses:
+          200:
+            body:
+              application/json:
+                type: Profile
+          403:
+            body:
+              application/json:
+                type: ErrorResponse
+          404:
+            body:
+              application/json:
+                type: ErrorResponse
+      patch:
+        description: Update a users profile
+        is: [authenticated]
+        responses:
+          200:
+            body:
+              application/json:
+                type: Profile
+          400:
+            body:
+              application/json:
+                type: ErrorResponse
+          403:
+            body:
+              application/json:
+                type: ErrorResponse
+          404:
+            body:
+              application/json:
+                type: ErrorResponse
+    /roles:
+      get:
+        description: Get roles attached to the user
+        is: [authenticated]
+        responses:
+          200:
+            body:
+              application/json:
+                type: [string]
+          403:
+            body:
+              application/json:
+                type: ErrorResponse
+          404:
+            body:
+              application/json:
+                type: ErrorResponse
+    /groups:
+      get:
+        description: Get groups attached to the user
+        is: [authenticated]
+        responses:
+          200:
+            body:
+              application/json:
+                type: [string]
+          403:
+            body:
+              application/json:
+                type: ErrorResponse
+          404:
+            body:
+              application/json:
+                type: ErrorResponse
+/me:
+  description: Convenience endpoints for interacting with the currently logged in user
+  get:
+    description: Get the current user
+    is: [authenticated]
+    responses:
+      200:
+        body:
+          application/json:
+            type: User
+      403:
+        body:
+          application/json:
+            type: ErrorResponse
+  /profile:
+    description: Get the current users profile
+    get:
+      is: [authenticated]
+      responses:
+        200:
+          body:
+            application/json:
+              type: Profile
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+    patch:
+      description: Update a users profile
+      is: [authenticated]
+      responses:
+        200:
+          body:
+            application/json:
+              type: Profile
+        400:
+          body:
+            application/json:
+              type: ErrorResponse
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+  /roles:
+    description: Get the current users roles
+    get:
+      is: [authenticated]
+      responses:
+        200:
+          body:
+            application/json:
+              type: [string]
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+  /groups:
+    description: Get the current users groups
+    get:
+      is: [authenticated]
+      responses:
+        200:
+          body:
+            application/json:
+              type: [string]
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+  /link:
+    description: Link a device to a user
+    post:
+      is: [authenticated]
+      body:
+        application/json:
+          type: object
+          properties:
+            code: string
+      responses:
+        204:
+        400:
+          body:
+            application/json:
+              type: ErrorResponse
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+        404:
+          body:
+            application/json:
+              type: ErrorResponse
+
+/keys:
+  description: Manage encryption keys
+  get:
+    description: Lists all keys
+    is: [authenticated]
+    responses:
+      200:
+        body:
+          application/json:
+            type: [Key]
+      403:
+        body:
+          application/json:
+            type: ErrorResponse
+  post:
+    description: Create a new key
+    is: [authenticated]
+    responses:
+      201:
+        body:
+          application/json:
+            type: ResourceResponse
+      403:
+        body:
+          application/json:
+            type: ErrorResponse
+  /{id}:
+    get:
+      description: Get a specific key
+      is: [authenticated]
+      responses:
+        200:
+          body:
+            text/plain:
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+        404:
+          body:
+            application/json:
+              type: ErrorResponse
+    delete:
+      description: Delete a specific key
+      is: [authenticated]
+      responses:
+        204:
+        403:
+          body:
+            application/json:
+              type: ErrorResponse
+        404:
+          body:
+            application/json:
+              type: ErrorResponse
+/devices:
+  get:
+    description: Get all devices. (If not admin only gets own devices)
+    is: [authenticated]
+    responses:
+      200:
+        headers:
+          Accept-Range:
+            description: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Ranges
+          Content-Range:
+            description: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range
+        body:
+          application/json:
+            type: [Device]
+      403:
+        body:
+          application/json:
+            type: ErrorResponse
+  post:
+    description: Request a link code and ID for this device
+    body:
+      application/json:
+        type: object
+        properties:
+          type:
+            description: Type of device. Either "companion" or "communal"
+            default: communal
+            required: false
+            type: string
+    responses:
+      201:
+        body:
+          application/json:
+              type: object
+              properties:
+                code: string
+      302:
+        body:
+          application/json:
+            type: ErrorResponse
+      400:
+        body:
+          application/json:
+            type: ErrorResponse
+  /{id}:
+    get:
+      description: Poll for authentication details
+      responses:
+        200:
+          body:
+            application/json:
+              type: object
+              properties:
+                token: string
+        204:
+          headers:
+            Retry-After:
+              description: Delay in seconds the client should respect before checking again
+        404:
+          body:
+            application/json:
+              type: ErrorResponse

@@ -1,0 +1,11 @@
+[
+    {
+        "email": "admin",
+        "password": "two1mmerse",
+        "roles": ["ROLE_ADMIN"]
+    },
+    {
+        "email": "user@2immerse.eu",
+        "password": "c6=puBESw4-U"
+    }
+]
