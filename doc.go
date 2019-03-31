@@ -12,4 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main // import "gitlab-ext.irt.de/2-immerse/auth-service"
+package main // import "github.com/2-IMMERSE/auth-service"
