@@ -17,7 +17,7 @@ package middleware
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
-	"gitlab-ext.irt.de/2-immerse/auth-service/model"
+	"github.com/2-IMMERSE/auth-service/model"
 )
 
 func Admin() echo.MiddlewareFunc {
