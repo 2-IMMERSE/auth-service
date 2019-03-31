@@ -16,7 +16,7 @@ package middleware
 
 import (
 	"github.com/labstack/echo"
-	"gitlab-ext.irt.de/2-immerse/auth-service/response"
+	"github.com/2-IMMERSE/auth-service/response"
 )
 
 func Error() echo.MiddlewareFunc {
