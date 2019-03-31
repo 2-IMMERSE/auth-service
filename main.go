@@ -35,11 +35,11 @@ import (
 	em "github.com/labstack/echo/middleware"
 	"github.com/labstack/gommon/log"
 
-	"gitlab-ext.irt.de/2-immerse/auth-service/consul"
-	"gitlab-ext.irt.de/2-immerse/auth-service/middleware"
-	"gitlab-ext.irt.de/2-immerse/auth-service/model"
-	"gitlab-ext.irt.de/2-immerse/auth-service/server"
-	"gitlab-ext.irt.de/2-immerse/auth-service/tools"
+	"github.com/2-IMMERSE/auth-service/consul"
+	"github.com/2-IMMERSE/auth-service/middleware"
+	"github.com/2-IMMERSE/auth-service/model"
+	"github.com/2-IMMERSE/auth-service/server"
+	"github.com/2-IMMERSE/auth-service/tools"
 )
 
 const (
