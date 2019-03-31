@@ -17,10 +17,10 @@ package server
 import (
 	"net/http"
 
-	"gitlab-ext.irt.de/2-immerse/auth-service/middleware"
-	"gitlab-ext.irt.de/2-immerse/auth-service/model"
-	"gitlab-ext.irt.de/2-immerse/auth-service/response"
-	"gitlab-ext.irt.de/2-immerse/auth-service/tools"
+	"github.com/2-IMMERSE/auth-service/middleware"
+	"github.com/2-IMMERSE/auth-service/model"
+	"github.com/2-IMMERSE/auth-service/response"
+	"github.com/2-IMMERSE/auth-service/tools"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
