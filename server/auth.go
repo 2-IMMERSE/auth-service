@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/2-IMMERSE/auth-service/middleware"
-	"ggithub.com/2-IMMERSE/auth-service/model"
+	"github.com/2-IMMERSE/auth-service/model"
 	"github.com/2-IMMERSE/auth-service/response"
 	"github.com/2-IMMERSE/auth-service/tools"
 	"github.com/2-IMMERSE/auth-service/tyk"
